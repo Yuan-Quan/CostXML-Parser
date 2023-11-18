@@ -24,19 +24,22 @@ namespace CostXMLParser.CLI
         {
             var parsedArgs = Parser.Default.ParseArguments<Options>(args);
 
+            if (parsedArgs.Tag == ParserResultType.NotParsed)
+            {
+                return;
+            }
+
             var deserializer = new Deserializer(parsedArgs.Value.InputFile);
 
             if (parsedArgs.Value.ExportFolderedRaw)
             {
                 if (parsedArgs.Value.OutputFolder == null)
                 {
-                    Console.WriteLine("ERR: Output folder is required for exporting foldered raw xml.");
+                    Console.WriteLine("WRN: Output folder is not set, so exporting to current directory.");
+                    parsedArgs.Value.OutputFolder = Environment.CurrentDirectory;
                 }
-                else
-                {
-                    var exporter = new Exporter(deserializer.Project);
-                    exporter.ExportFoldered(parsedArgs.Value.OutputFolder);
-                }
+                var exporter = new Exporter(deserializer.Project);
+                exporter.ExportFoldered(parsedArgs.Value.OutputFolder);
             }
 
         }
