@@ -18,6 +18,10 @@ namespace CostXMLParser.CLI
             // export option: raw xml
             [Option('F', "foldered", Required = false, HelpText = "Export foldered raw xml.")]
             public bool ExportFolderedRaw { get; set; }
+
+            // export option: summary only csv
+            [Option('S', "summary", Required = false, HelpText = "Export summary csv.")]
+            public bool ExportSummary { get; set; }
         }
 
         static void Main(string[] args)
@@ -40,6 +44,17 @@ namespace CostXMLParser.CLI
                 }
                 var exporter = new Exporter(deserializer.Project);
                 exporter.ExportFoldered(parsedArgs.Value.OutputFolder);
+            }
+
+            if (parsedArgs.Value.ExportSummary)
+            {
+                if (parsedArgs.Value.OutputFolder == null)
+                {
+                    Console.WriteLine("WRN: Output folder is not set, so exporting to current directory.");
+                    parsedArgs.Value.OutputFolder = Environment.CurrentDirectory;
+                }
+                var exporter = new Exporter(deserializer.Project);
+                exporter.ExportSummaryCSV(parsedArgs.Value.OutputFolder);
             }
 
         }

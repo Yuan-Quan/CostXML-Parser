@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text;
 using System.Xml.Linq;
 
 namespace CostXMLParser
@@ -79,7 +80,7 @@ namespace CostXMLParser
 
         }
 
-        // flatten the tree structure to a single level
+        // recursive call to flatten the tree structure to a single level
         void GenerateDisplayItems(SummaryItem item, String prefix)
         {
             if (item.Children.Count == 0)
@@ -100,6 +101,43 @@ namespace CostXMLParser
                 DisplayItems.Add(child);
                 GenerateDisplayItems(child, child.Sequence);
             }
+        }
+
+        public string ToCSV()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("INDEX,ITEM_NAME,CALCULATION_METHOD,TOTAL");
+            foreach (var item in DisplayItems)
+            {
+                sb.Append(item.Sequence + ",");
+
+                // if for some reason the name contains a comma, replace it with a chinese comma
+                if (item.Name.Contains(','))
+                {
+                    var sanitized = item.Name.Replace(',', '，');
+                    sb.Append(sanitized + ",");
+                }
+                else
+                {
+                    sb.Append(item.Name + ",");
+                }
+
+                // if for some reason the calculation method contains a comma, replace it with a chinese comma
+                if (item.CalculationMethod.Contains(','))
+                {
+                    var sanitized = item.CalculationMethod.Replace(',', '，');
+                    sb.Append(sanitized + ",");
+                }
+                else
+                {
+                    sb.Append(item.CalculationMethod + ",");
+                }
+
+                sb.Append(item.Total.ToString(CultureInfo.InvariantCulture));
+                sb.AppendLine();
+
+            }
+            return sb.ToString();
         }
     }
 }
