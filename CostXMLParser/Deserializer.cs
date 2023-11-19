@@ -5,9 +5,16 @@ namespace CostXMLParser
     public class UnitProject
     {
         public XElement XDoc;
+        public SummaryTable SummaryTable;
         public UnitProject(XElement xdoc)
         {
             XDoc = xdoc;
+
+            Console.WriteLine("Step 3: Parsing Summary Table...");
+
+            SummaryTable = new SummaryTable(XDoc.Element("Summary"));
+
+            Console.WriteLine("Summary Table: ");
         }
     }
 
@@ -19,13 +26,10 @@ namespace CostXMLParser
         public SingleProject(XElement xdoc)
         {
             XDoc = xdoc;
-            UnitProjects = Deserializer.ExtractUnitProjects(XDoc);
 
-            Console.WriteLine("Found " + UnitProjects.Length + " Unit Projects for " + XDoc.Attribute("Name").Value);
-            foreach (var item in UnitProjects)
-            {
-                Console.WriteLine(item.XDoc.Attribute("Name").Value);
-            }
+            Console.WriteLine("Step 2: Parsing Unit Projects...");
+
+            UnitProjects = Deserializer.ExtractUnitProjects(XDoc);
         }
     }
 
@@ -39,6 +43,8 @@ namespace CostXMLParser
         {
             XDoc = xdoc;
             ProjectName = XDoc.Attribute("Name").Value;
+            Console.WriteLine("Project Name: " + ProjectName);
+            Console.WriteLine("Step 1: Parsing Single Projects...");
             SingleProjects = Deserializer.ExtractSingleProjects(XDoc);
         }
     }
@@ -68,6 +74,10 @@ namespace CostXMLParser
             }
 
             Project = new ConstructProject(_xml_root.Element("ConstructProject"));
+
+
+
+            Console.WriteLine("Parsing Finished");
 
         }
 
@@ -123,6 +133,7 @@ namespace CostXMLParser
             }
         }
 
+        // generate a array of SingleProject from the DOM of ConstructProject
         public static SingleProject[] ExtractSingleProjects(XElement xmlConstructProject)
         {
             var SingleProjects = new List<SingleProject>();
@@ -133,6 +144,7 @@ namespace CostXMLParser
             return SingleProjects.ToArray();
         }
 
+        // generate a array of UnitProject from the DOM of SingleProject
         public static UnitProject[] ExtractUnitProjects(XElement xSingleProject)
         {
             var unitProjects = new List<UnitProject>();
