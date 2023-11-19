@@ -13,8 +13,6 @@ namespace CostXMLParser
             Console.WriteLine("Step 3: Parsing Summary Table...");
 
             SummaryTable = new SummaryTable(XDoc.Element("Summary"));
-
-            Console.WriteLine("Summary Table: ");
         }
     }
 
