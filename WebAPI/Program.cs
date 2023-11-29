@@ -1,3 +1,4 @@
+using WebAPI.Controllers;
 using Weikio.ApiFramework;
 using Weikio.ApiFramework.Abstractions;
 using Weikio.ApiFramework.Core.StartupTasks;
@@ -14,8 +15,8 @@ namespace WebAPI
             builder.Services.AddControllers();
             builder.Services.AddControllers().AddXmlDataContractSerializerFormatters();
             builder.Services.AddApiFramework()
-                .AddApi<HelloworldAPI>()
-                .AddEndpoint<HelloworldAPI>("/helloworld");
+                .AddApi<MagicfluAPITestController>()
+                .AddEndpoint<MagicfluAPITestController>("/magicfluapitest");
             builder.Services.AddOpenApiDocument();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -28,6 +29,7 @@ namespace WebAPI
             {
                 app.UseOpenApi();
                 app.UseSwaggerUi3();
+                app.UseDeveloperExceptionPage();
             }
 
             //app.UseHttpsRedirection();
@@ -43,4 +45,5 @@ namespace WebAPI
             app.Run();
         }
     }
+
 }
