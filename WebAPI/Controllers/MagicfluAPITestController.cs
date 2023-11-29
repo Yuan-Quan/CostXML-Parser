@@ -18,7 +18,7 @@ namespace WebAPI.Controllers
         public IEnumerable<MagicfluAPITestData> Get()
         {
             var list = new List<MagicfluAPITestData>();
-            using (TextFieldParser parser = new TextFieldParser(@"..\利建大厦Summary\地下工程\地下室土建(单位工程).CSV"))
+            using (TextFieldParser parser = new TextFieldParser(@"../output/利建大厦Summary/地下工程/地下室土建(单位工程).CSV"))
             {
                 parser.TextFieldType = FieldType.Delimited;
                 parser.SetDelimiters(",");
