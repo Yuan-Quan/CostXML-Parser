@@ -16,7 +16,7 @@ namespace WebAPI
             builder.Services.AddControllers().AddXmlDataContractSerializerFormatters();
             builder.Services.AddApiFramework()
                 .AddApi<MagicfluAPITestController>()
-                .AddEndpoint<MagicfluAPITestController>("/magicfluapitest");
+                .AddEndpoint<MagicfluAPITestController>("/magicflu/中文测试");
             builder.Services.AddOpenApiDocument();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
