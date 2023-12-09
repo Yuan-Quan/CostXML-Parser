@@ -1,11 +1,11 @@
 
 namespace WebAPI
 {
-    public class MagicfluAPITestData
+    public class SummaryData
     {
-        public MagicfluAPITestData()
+        public SummaryData()
         {
-            Items = new List<MagicfluAPITestDataItem>();
+            Items = new List<SummaryDataItem>();
             Version = "0.1";
         }
 
@@ -16,10 +16,10 @@ namespace WebAPI
         }
 
 
-        public List<MagicfluAPITestDataItem> Items { get; set; }
+        public List<SummaryDataItem> Items { get; set; }
     }
 
-    public class MagicfluAPITestDataItem
+    public class SummaryDataItem
     {
         public string Sequence { get; set; }
         public string Name { get; set; }

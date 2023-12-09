@@ -4,21 +4,26 @@ using Microsoft.VisualBasic.FileIO;
 namespace WebAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class MagicfluAPITestController : ControllerBase
+    [Route("/api/magicflu")]
+    public class MagicfluAPIController : ControllerBase
     {
-        private readonly ILogger<MagicfluAPITestController> _logger;
+        private readonly ILogger<MagicfluAPIController> _logger;
 
-        public MagicfluAPITestController(ILogger<MagicfluAPITestController> logger)
+        public MagicfluAPIController(ILogger<MagicfluAPIController> logger)
         {
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetMagicfluAPITestData")]
-        public MagicfluAPITestData Get()
+        [HttpGet]
+        [Route("{path?}")]
+        public IActionResult Get([FromRoute] string? path)
         {
-            var response = new MagicfluAPITestData();
-            using (TextFieldParser parser = new TextFieldParser(@"../output/利建大厦Summary/地下工程/地下室土建(单位工程).CSV"))
+            if (String.IsNullOrEmpty(path))
+            {
+                return BadRequest("target path shall be provided");
+            }
+            var response = new SummaryData();
+            using (TextFieldParser parser = new TextFieldParser(Path.Combine("../output", "test.csv")))
             {
                 parser.TextFieldType = FieldType.Delimited;
                 parser.SetDelimiters(",");
@@ -31,7 +36,7 @@ namespace WebAPI.Controllers
                     {
                         continue;
                     }
-                    response.Items.Add(new MagicfluAPITestDataItem()
+                    response.Items.Add(new SummaryDataItem()
                     {
                         Sequence = fields[0],
                         Name = fields[1],
@@ -40,7 +45,7 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            return response;
+            return Ok(response);
         }
     }
 }
