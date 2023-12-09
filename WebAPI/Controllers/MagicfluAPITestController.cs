@@ -9,6 +9,8 @@ namespace WebAPI.Controllers
     {
         private readonly ILogger<MagicfluAPITestController> _logger;
 
+        public string CsvPath { get; set; }
+
         public MagicfluAPITestController(ILogger<MagicfluAPITestController> logger)
         {
             _logger = logger;

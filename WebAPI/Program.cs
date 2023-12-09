@@ -14,8 +14,15 @@ namespace WebAPI
             // Add services to the container.
             builder.Services.AddControllers();
             builder.Services.AddControllers().AddXmlDataContractSerializerFormatters();
-            builder.Services.AddApiFramework()
+            builder.Services.AddApiFramework(
+                options =>
+                {
+                    options.AutoResolveApis = true;
+                }
+            )
                 .AddApi<MagicfluAPITestController>()
+                .AddEndpoint("/helloquan", "WebAPI.HelloWorldApi", new HelloWorldApiConfiguration() { Name = "Quan" })
+                .AddEndpoint("/hellobob", "WebAPI.HelloWorldApi", new HelloWorldApiConfiguration() { Name = "Bob" })
                 .AddEndpoint<MagicfluAPITestController>("/magicflu/中文测试");
             builder.Services.AddOpenApiDocument();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
