@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 const steps = ['上传XML文件', '选择处理方法', '生成结果'];
-const steps_route = ['upload', 'config-process', 'result'];
+const steps_route = ['upload', 'config-processing', 'result'];
 
 export default function CreateStepper() {
     const [activeStep, setActiveStep] = React.useState(0);
