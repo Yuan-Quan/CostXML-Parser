@@ -39,6 +39,8 @@ namespace WebAPI.Controllers
                 DateTime lastModified = System.IO.File.GetLastWriteTime(file);
                 list.Add(new UploadedProject() { FileName = Path.GetFileName(file), DateUploaded = lastModified.ToString("yyyy-MM-dd HH:mm:ss") });
             }
+            // sort list by date
+            list.Sort((x, y) => DateTime.Compare(DateTime.Parse(y.DateUploaded), DateTime.Parse(x.DateUploaded)));
             return Ok(list);
         }
     }
