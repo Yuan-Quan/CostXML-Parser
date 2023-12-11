@@ -1,3 +1,5 @@
+using Microsoft.Net.Http.Headers;
+
 namespace WebAPI
 {
     public class Program
@@ -7,6 +9,15 @@ namespace WebAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowReactDevServer", builder =>
+                {
+                    builder.WithOrigins("http://localhost:3000")
+                        .WithMethods("GET", "POST", "PUT", "DELETE")
+                        .WithHeaders(HeaderNames.ContentType);
+                });
+            });
 
             builder.Services.AddControllers();
             builder.Services.AddControllers().AddXmlDataContractSerializerFormatters();
@@ -22,6 +33,8 @@ namespace WebAPI
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseCors("AllowReactDevServer");
 
             //app.UseHttpsRedirection();
 

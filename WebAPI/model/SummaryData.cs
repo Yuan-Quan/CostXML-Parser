@@ -1,5 +1,5 @@
 
-namespace WebAPI
+namespace WebAPI.Model
 {
     public class SummaryData
     {

@@ -11,15 +11,18 @@ export default function ProjectFileUpload() {
         setSelectedFile(event.target.files![0]);
     }
 
-    const onFileUpload = () => {
+    const onFileUpload = async () => {
         // Create an object of formData
         const formData = new FormData();
 
         // Update the formData object
         formData.append(
-            "NewProject",
+            "formFile",
             selectedFile!,
-            selectedFile!.name
+        );
+        formData.append(
+            "fileName",
+            selectedFile!.name,
         );
 
         // Details of the uploaded file
@@ -27,7 +30,12 @@ export default function ProjectFileUpload() {
 
         // Request made to the backend api
         // Send formData object
-        axios.post("api/uploadfile", formData);
+        try {
+            const res = await axios.post("http://localhost:7094/api/fileupload", formData);
+            console.log(res);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return (
@@ -35,7 +43,7 @@ export default function ProjectFileUpload() {
             <Typography> 选择上传的XML文件</Typography>
             <Box>
                 <input type="file" onChange={onFileChange} />
-                <Button>上传</Button>
+                <Button onClick={onFileUpload}>上传</Button>
             </Box>
         </Box>
     )
