@@ -27,7 +27,7 @@ namespace WebAPI.Controllers
         [Route("uploaded-projects")]
         public IActionResult GetUploadedProjects()
         {
-            var list = new List<string>();
+            var list = new List<UploadedProject>();
             var path = Path.Combine("../toProcess");
             if (!Directory.Exists(path))
             {
@@ -36,7 +36,8 @@ namespace WebAPI.Controllers
             var files = Directory.GetFiles(path);
             foreach (var file in files)
             {
-                list.Add(Path.GetFileName(file));
+                DateTime lastModified = System.IO.File.GetLastWriteTime(file);
+                list.Add(new UploadedProject() { FileName = Path.GetFileName(file), DateUploaded = lastModified.ToString("yyyy-MM-dd HH:mm:ss") });
             }
             return Ok(list);
         }
