@@ -22,8 +22,14 @@ namespace WebAPI.Controllers
             {
                 return BadRequest("target path shall be provided");
             }
+            path = Uri.UnescapeDataString(path);
+            path = Path.Combine("../output", path + ".csv");
             var response = new SummaryData();
-            using (TextFieldParser parser = new TextFieldParser(Path.Combine("../output", "test.csv")))
+            if (!System.IO.File.Exists(path))
+            {
+                return NotFound("target file not found at " + path);
+            }
+            using (TextFieldParser parser = new TextFieldParser(path))
             {
                 parser.TextFieldType = FieldType.Delimited;
                 parser.SetDelimiters(",");
