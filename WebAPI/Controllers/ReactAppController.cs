@@ -115,7 +115,7 @@ namespace WebAPI.Controllers
                 if (item.EndsWith(".CSV"))
                 {
                     var name = item[0..^4].Replace("\\", "/");
-                    var url = "http://localhost:7094/api/magicflu/" + Uri.EscapeDataString(item[0..^4].Replace("\\", "/"));
+                    var url = "/api/magicflu/" + Uri.EscapeDataString(item[0..^4].Replace("\\", "/"));
                     response.Results.Add(new ProcessResultItem() { Name = name, Url = url });
                 }
 
