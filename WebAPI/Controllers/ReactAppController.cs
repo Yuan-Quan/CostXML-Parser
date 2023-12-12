@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using CostXMLParser;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Model;
@@ -55,8 +56,9 @@ namespace WebAPI.Controllers
             {
                 return NotFound("target file not found at " + path);
             }
+            var hash = request.FileName[1..8];
 
-            var outputFolder = Path.Combine("../output/" + request.FileName[1..8] + " ");
+            var outputFolder = Path.Combine("../output", hash);
             Console.WriteLine("outputFolder: " + outputFolder);
 
             var deserializer = new Deserializer(path);
@@ -72,14 +74,57 @@ namespace WebAPI.Controllers
                 exporter.ExportSummaryCSV(outputFolder);
             }
 
-            return Ok("ok");
+            return Ok(hash);
         }
+
+        [HttpGet]
+        [Route("result/{hash}")]
+        public IActionResult GetResult([FromRoute] string hash)
+        {
+            var outputFolder = Path.Combine("../output", hash);
+            if (!Directory.Exists(outputFolder))
+            {
+                return NotFound("target folder not found at " + outputFolder);
+            }
+            var response = GenerateResponse(outputFolder);
+            return Ok(response);
+        }
+
+        private ProcessProjectResponse GenerateResponse(string outputFolder)
+        {
+            Console.WriteLine("GenerateResponse:" + outputFolder);
+
+            var response = new ProcessProjectResponse();
+
+            response.ProjectName = "test";
+            response.Results = new List<ProcessResultItem>();
+
+            var allfiles = new List<string>(Directory.GetFiles(outputFolder, "*.CSV", SearchOption.AllDirectories));
+            var stripedFiles = new List<string>();
+
+            foreach (var item in allfiles)
+            {
+                if (item.StartsWith("../output\\"))
+                {
+                    stripedFiles.Add(item[10..]);
+                }
+            }
+
+            foreach (var item in stripedFiles)
+            {
+                if (item.EndsWith(".CSV"))
+                {
+                    var name = item[0..^4].Replace("\\", "/");
+                    var url = "http://localhost:7094/api/magicflu/" + Uri.EscapeDataString(item[0..^4].Replace("\\", "/"));
+                    response.Results.Add(new ProcessResultItem() { Name = name, Url = url });
+                }
+
+            }
+
+            return response;
+        }
+
     }
 
-    public class ProcessProjectRequest
-    {
-        public string FileName { get; set; }
-        public bool IsExportFolderedRaw { get; set; }
-        public bool IsExportSummary { get; set; }
-    }
+
 }

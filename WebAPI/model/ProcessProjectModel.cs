@@ -9,9 +9,8 @@ namespace WebAPI.Model
 
     public class ProcessProjectResponse
     {
-        public string FileName { get; set; }
         public string ProjectName { get; set; }
-        public ProcessResultItem ResultRoot { get; set; }
+        public List<ProcessResultItem> Results { get; set; }
 
     }
 
@@ -19,6 +18,5 @@ namespace WebAPI.Model
     {
         public string Name { get; set; }
         public string Url { get; set; }
-        public ProcessResultItem[] Children { get; set; }
     }
 }
