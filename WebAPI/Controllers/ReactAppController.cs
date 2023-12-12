@@ -1,3 +1,4 @@
+using CostXMLParser;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Model;
 
@@ -44,5 +45,41 @@ namespace WebAPI.Controllers
             list.Sort((x, y) => DateTime.Compare(DateTime.Parse(y.DateUploaded), DateTime.Parse(x.DateUploaded)));
             return Ok(list);
         }
+
+        [HttpPost]
+        [Route("process-project")]
+        public IActionResult ProcessProject([FromBody] ProcessProjectRequest request)
+        {
+            var path = Path.Combine("../toProcess", request.FileName);
+            if (!System.IO.File.Exists(path))
+            {
+                return NotFound("target file not found at " + path);
+            }
+
+            var outputFolder = Path.Combine("../output/" + request.FileName[1..8] + " ");
+            Console.WriteLine("outputFolder: " + outputFolder);
+
+            var deserializer = new Deserializer(path);
+
+            var exporter = new Exporter(deserializer.Project);
+            if (request.IsExportFolderedRaw)
+            {
+                exporter.ExportFoldered(outputFolder);
+            }
+
+            if (request.IsExportSummary)
+            {
+                exporter.ExportSummaryCSV(outputFolder);
+            }
+
+            return Ok("ok");
+        }
+    }
+
+    public class ProcessProjectRequest
+    {
+        public string FileName { get; set; }
+        public bool IsExportFolderedRaw { get; set; }
+        public bool IsExportSummary { get; set; }
     }
 }
