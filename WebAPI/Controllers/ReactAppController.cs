@@ -19,7 +19,8 @@ namespace WebAPI.Controllers
         public IActionResult Get()
         {
             var list = new List<ProcessingMethod>();
-            list.Add(new ProcessingMethod() { ProcessName = "生成单位工程费用汇总表" });
+            list.Add(new ProcessingMethod() { ProcessName = "生成打包后的xml", ProcessDescription = "单个单位工程的xml" });
+            list.Add(new ProcessingMethod() { ProcessName = "生成单位工程费用汇总表", ProcessDescription = "生成单位工程费用汇总表" });
             return Ok(list);
         }
 
