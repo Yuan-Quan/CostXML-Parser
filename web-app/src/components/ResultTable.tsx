@@ -10,6 +10,7 @@ import { Box } from '@mui/system';
 import { Button, Typography } from '@mui/material';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import './ResultTable.css';
+import { AppContext } from '../App';
 
 interface ResultItem {
     name: string;
@@ -20,6 +21,7 @@ interface ProcessingResult {
     results: ResultItem[];
 }
 export default function ResultTable() {
+    const { currentProjectHash } = React.useContext(AppContext);
     const [processingResult, setProcessingResult] = React.useState<ProcessingResult>({ projectName: "", results: [] } as ProcessingResult);
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string>("");
@@ -28,7 +30,7 @@ export default function ResultTable() {
         const fetchData = async () => {
             setIsLoading(true);
             try {
-                const res = await fetch("http://43.163.205.191:8080/api/reactapp/result/eebf58c");
+                const res = await fetch(`http://43.163.205.191:8080/api/reactapp/result/${currentProjectHash}`);
                 setProcessingResult(await res.json() as ProcessingResult);
             } catch (ex: any) {
                 setError(ex.toString());

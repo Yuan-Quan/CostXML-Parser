@@ -1,7 +1,8 @@
 import { is } from '@babel/types';
-import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import * as React from 'react';
+import { AppContext } from '../App';
 
 interface Selection {
     fileName: string;
@@ -13,51 +14,53 @@ export default function ProcessingFileSelection() {
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string>("");
     const [selectedFile, setSelectedFile] = React.useState<string>("");
+    const { currentProjectHash, setCurrentProjectHash } = React.useContext(AppContext);
 
     React.useEffect(() => {
         const fetchData = async () => {
-            setIsLoading(true);
+            var selections = [] as Selection[];
             try {
                 const res = await fetch("http://43.163.205.191:8080/api/reactapp/uploaded-projects");
-                setSelections(await res.json() as Selection[]);
+                selections = await res.json() as Selection[];
             } catch (ex: any) {
                 setError(ex.toString());
             } finally {
                 setIsLoading(false);
             }
+            setSelections(selections);
+            setSelectedFile(selections[0].fileName);
+            setCurrentProjectHash(selections[0].fileName.substring(1, 7));
         }
         fetchData();
     }, []);
 
-    React.useEffect(() => {
-        if (selections.length > 0) {
-            setSelectedFile(selections[0].fileName);
-        }
-    }, [selections]);
-
     const handleSelect = (event: SelectChangeEvent) => {
         setSelectedFile(event.target.value);
+        setCurrentProjectHash(event.target.value.substring(1, 7));
     }
+
     return (
         <Box>
             {isLoading && <p>加载中...</p>}
             {error && <p>{error}</p>}
             {!isLoading && !error && selections.length > 0 &&
-                <FormControl fullWidth>
+                <Box>
+                    <FormControl fullWidth>
 
-                    <InputLabel id="demo-simple-select-label">File</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={selectedFile}
-                        label="File"
-                        onChange={handleSelect}
-                    >
-                        {selections.map((selection) => (
-                            <MenuItem value={selection.fileName}>{selection.fileName}</MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+                        <InputLabel id="demo-simple-select-label">File</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={selectedFile}
+                            label="File"
+                            onChange={handleSelect}
+                        >
+                            {selections.map((selection) => (
+                                <MenuItem value={selection.fileName}>{selection.fileName}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Box>
             }
         </Box>
     )
