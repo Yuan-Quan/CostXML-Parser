@@ -63,7 +63,7 @@ export default function ProcessingMethodSelection() {
                 {isLoading && <p>加载中...</p>}
                 {error && <p>{error}</p>}
                 {!isLoading && !error && checkboxes.map((item) => (
-                    <FormControlLabel control={<Checkbox checked={item.checked} onChange={handleChange} name={item.name} />} label={item.name} />
+                    <FormControlLabel control={<Checkbox checked={item.checked} onChange={handleChange} name={item.name} disabled />} label={item.name} />
                 ))}
             </FormGroup>
         </Box>

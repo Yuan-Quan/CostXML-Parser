@@ -7,6 +7,9 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Box } from '@mui/system';
+import { Button, Typography } from '@mui/material';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import './ResultTable.css';
 
 interface ResultItem {
     name: string;
@@ -56,9 +59,21 @@ export default function ResultTable() {
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
                                     <TableCell component="th" scope="row">
-                                        {row.name}
+                                        <Typography noWrap>
+                                            {row.name}
+                                        </Typography>
                                     </TableCell>
-                                    <TableCell align="left">{row.url}</TableCell>
+                                    <TableCell align="left">
+                                        <Box sx={{
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                        }}>
+                                            <Typography sx={{ overflow: "hidden", textOverflow: "ellipsis", width: '25rem' }}>{row.url}</Typography>
+                                            <CopyToClipboard text={row.url} onCopy={() => { console.log("copyed") }}>
+                                                <Button variant='outlined'>复制</Button>
+                                            </CopyToClipboard>
+                                        </Box>
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
