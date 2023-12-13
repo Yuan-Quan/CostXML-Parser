@@ -18,7 +18,7 @@ export default function ProcessingFileSelection() {
         const fetchData = async () => {
             setIsLoading(true);
             try {
-                const res = await fetch("http://localhost:7094/api/reactapp/uploaded-projects");
+                const res = await fetch("http://43.163.205.191:8080/api/reactapp/uploaded-projects");
                 setSelections(await res.json() as Selection[]);
             } catch (ex: any) {
                 setError(ex.toString());

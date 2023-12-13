@@ -31,7 +31,7 @@ export default function ProjectFileUpload() {
         // Request made to the backend api
         // Send formData object
         try {
-            const res = await axios.post("http://localhost:7094/api/fileupload", formData);
+            const res = await axios.post("http://43.163.205.191:8080/api/fileupload", formData);
             console.log(res);
         } catch (error) {
             console.log(error);
