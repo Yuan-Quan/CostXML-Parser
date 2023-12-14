@@ -29,7 +29,7 @@ function App() {
     <>
       <div className="App">
         <AppContext.Provider value={{ currentProjectName, setCurrentProjectName }}>
-          <BRouter basename='/app'>
+          <BRouter basename='/'>
             <Routes>
               <Route path="/" element={<Main />} />
               <Route path="/new" element={<NewProject />} >
