@@ -9,22 +9,26 @@ import ProcessingConfiguration from './components/ProcessingConfiguration';
 import ProcessingResult from './components/ProcessingResult';
 
 interface IAppContext {
-  currentProjectHash: string;
-  setCurrentProjectHash: React.Dispatch<React.SetStateAction<string>>;
+  currentProjectName: string;
+  setCurrentProjectName: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const AppContext = React.createContext<IAppContext>(null!);
 
 function App() {
-  const [currentProjectHash, setCurrentProjectHash] = React.useState<string>(() => {
+  const [currentProjectName, setCurrentProjectName] = React.useState<string>(() => {
     const hash = localStorage.getItem("currentProjectHash");
     return hash ? hash : "";
   });
 
+  React.useEffect(() => {
+    localStorage.setItem("currentProjectHash", currentProjectName);
+  }, [currentProjectName]);
+
   return (
     <>
       <div className="App">
-        <AppContext.Provider value={{ currentProjectHash, setCurrentProjectHash }}>
+        <AppContext.Provider value={{ currentProjectName, setCurrentProjectName }}>
           <BRouter basename='/app'>
             <Routes>
               <Route path="/" element={<Main />} />

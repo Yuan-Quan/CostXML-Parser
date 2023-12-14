@@ -14,7 +14,7 @@ export default function ProcessingFileSelection() {
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string>("");
     const [selectedFile, setSelectedFile] = React.useState<string>("");
-    const { currentProjectHash, setCurrentProjectHash } = React.useContext(AppContext);
+    const { currentProjectName, setCurrentProjectName } = React.useContext(AppContext);
 
     React.useEffect(() => {
         const fetchData = async () => {
@@ -29,14 +29,14 @@ export default function ProcessingFileSelection() {
             }
             setSelections(selections);
             setSelectedFile(selections[0].fileName);
-            setCurrentProjectHash(selections[0].fileName.substring(1, 7));
+            setCurrentProjectName(selections[0].fileName);
         }
         fetchData();
     }, []);
 
     const handleSelect = (event: SelectChangeEvent) => {
         setSelectedFile(event.target.value);
-        setCurrentProjectHash(event.target.value.substring(1, 7));
+        setCurrentProjectName(event.target.value);
     }
 
     return (

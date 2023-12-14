@@ -6,17 +6,41 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { AppContext } from '../App';
 
 const steps = ['上传XML文件', '选择处理方法', '生成结果'];
 const steps_route = ['upload', 'config-processing', 'result'];
 
 export default function CreateStepper() {
+    const { currentProjectName } = React.useContext(AppContext);
     const [activeStep, setActiveStep] = React.useState(0);
     const [skipped, setSkipped] = React.useState(new Set<number>());
     const navigate = useNavigate();
 
+    const processProject = async () => {
+        console.log(`Processing project ${currentProjectName}...`)
+        try {
+            const res = await fetch("http://43.163.205.191:8080/api/reactapp/process-project", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "fileName": `${currentProjectName}`,
+                    "isExportFolderedRaw": true,
+                    "isExportSummary": true
+                })
+            });
+
+            console.log(res);
+        }
+        catch (ex: any) {
+            console.log(ex);
+        }
+    }
+
     const isStepOptional = (step: number) => {
-        return step === 1;
+        return false;
     };
 
     const isStepSkipped = (step: number) => {
@@ -32,6 +56,10 @@ export default function CreateStepper() {
 
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
         setSkipped(newSkipped);
+
+        if (activeStep === 1) {
+            processProject();
+        }
 
         navigate(steps_route[activeStep + 1])
     };

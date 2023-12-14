@@ -21,7 +21,7 @@ interface ProcessingResult {
     results: ResultItem[];
 }
 export default function ResultTable() {
-    const { currentProjectHash } = React.useContext(AppContext);
+    const { currentProjectName } = React.useContext(AppContext);
     const [processingResult, setProcessingResult] = React.useState<ProcessingResult>({ projectName: "", results: [] } as ProcessingResult);
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string>("");
@@ -30,14 +30,24 @@ export default function ResultTable() {
         const fetchData = async () => {
             setIsLoading(true);
             try {
-                const res = await fetch(`http://43.163.205.191:8080/api/reactapp/result/${currentProjectHash}`);
+                var res = await fetch(`http://43.163.205.191:8080/api/reactapp/result/${currentProjectName.substring(1, 8)}`);
+                if (res.status === 404) {
+                    await new Promise(f => setTimeout(f, 1000)); // workaround for the server not ready
+                    res = await fetch(`http://43.163.205.191:8080/api/reactapp/result/${currentProjectName.substring(1, 8)}`);
+                }
+                else if (res.status !== 200) {
+                    throw new Error(`请求失败: ${res.status}: ${res.statusText}`);
+                }
                 setProcessingResult(await res.json() as ProcessingResult);
             } catch (ex: any) {
                 setError(ex.toString());
+                return false;
             } finally {
                 setIsLoading(false);
             }
+            return true;
         }
+
         fetchData();
     }, []);
 
